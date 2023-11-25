@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class main {
+public class App {
     public static void main(String[] args){
         Scanner input = new Scanner(System.in);
 
@@ -7,7 +7,8 @@ public class main {
 
         String name = input.next();
         SayHello intro = new SayHello(name);
-    
+        
+        GameBoards.printAllBoards();
 
     }
 }

@@ -1,5 +1,5 @@
 public class SayHello {
-    String name;
+    public static String name;
 
     public SayHello(String name){
         this.name = name;
