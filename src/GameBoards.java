@@ -51,6 +51,15 @@ public class GameBoards {
         {'O', 'O', 'O', 'O', 'X', 'O', 'O', 'O', 'O', 'X'}
     };
 
+    private static void printBoard(char[][] board){
+        for(char[] row : board){
+            for(char Char: row){
+                System.out.print(Char);
+            }
+            System.out.println();
+        }
+    }
+
     public static void printAllBoards(){
         printBoard(everyTwo);
         System.out.println();
@@ -61,12 +70,18 @@ public class GameBoards {
         printBoard(everyFive);
     }
 
-    private static void printBoard(char[][] board){
-        for(char[] row : board){
-            for(char Char: row){
-                System.out.print(Char);
-            }
-            System.out.println();
+    public static char[][] getBoard(String gamePhase){
+        switch (gamePhase){
+            case "Patrol Search":
+            return everyTwo;
+            case "Sub Search":
+            return everyThree;
+            case "Battleship Search":
+            return everyFour;
+            case "Carrier Search":
+            return everyFive;
+            default: 
+            return everyTwo;
         }
     }
 }
