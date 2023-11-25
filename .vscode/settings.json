@@ -1,6 +1,7 @@
 {
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
+    "editor.inlayHints.enabled": "off",
     "java.project.referencedLibraries": [
         "lib/**/*.jar"
     ]

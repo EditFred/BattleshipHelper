@@ -10,6 +10,7 @@ public class App {
         GamePlay game1 = new GamePlay();
 
         game1.parseCord("A1");
+        game1.startGame();
         // GameBoards.printAllBoards();
 
     }
