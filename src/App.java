@@ -7,8 +7,10 @@ public class App {
 
         String name = input.next();
         SayHello intro = new SayHello(name);
-        
-        GameBoards.printAllBoards();
+        GamePlay game1 = new GamePlay();
+
+        game1.parseCord("A1");
+        // GameBoards.printAllBoards();
 
     }
 }
