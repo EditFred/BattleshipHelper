@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class GamePlay {
     public String shipMode = "Patrol Search";
     public Ship patrolBoat, submarine, destroyer, battleship, carrier;
@@ -16,12 +18,54 @@ public class GamePlay {
                 currentBoard[i][j] = '~';
             }
         }
-        for(int i = 0; i< 50; i++){
-            System.out.println(parseArray(targetSelect()));
-        }
-
     }
 
+    public void makeGuess(){
+        int[] target = targetSelect();
+        String gridCord = parseArray(target);
+        Scanner input = new Scanner(System.in);
+
+
+        System.out.println("Guess: " + gridCord);
+        System.out.print("Did we hit? ");
+        String result = input.nextLine().toLowerCase();
+
+        if(result.equals("y") || result.equals("yes")){
+            System.out.println("which boat?");
+            String hitBoat = input.nextLine().toLowerCase();
+            hit(hitBoat, gridCord, target);
+        } else {
+            System.out.println(result.toLowerCase());
+        }
+    }
+
+
+    private void hit(String hitBoatResult, String gridCord, int[] target){
+        char boatChar = hitBoatResult.charAt(0);
+        Boolean sunk;
+        switch(boatChar){
+            case 'p':
+            patrolBoat.gotHit(gridCord);
+            //did sink?
+            break;
+            case 's':
+            submarine.gotHit(gridCord);
+            break;
+            case 'd':
+            destroyer.gotHit(gridCord);
+            break;
+            case 'b':
+            battleship.gotHit(gridCord);
+            break;
+            case 'c':
+            carrier.gotHit(gridCord);
+            break;
+            default:
+            System.out.println("I'm not familiar with that boat...");
+        }
+    }
+
+    private void updateBoard(int[] target, String )
 
     public int[] parseCord(String cord){
         int[] arrayCord = new int[2];
@@ -109,7 +153,6 @@ public class GamePlay {
     public String getMode(){
         return shipMode;
     }
-
 
     private int[] targetSelect(){
         int[] target = new int[]{0,0};
