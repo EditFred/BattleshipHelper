@@ -38,13 +38,16 @@ public class Ship {
     }
 
     public void gotHit(String cords){
-        System.out.println(name + " got hit.");
+        System.out.println(name + " got hit at " + cords);
+
         hitCords[hits] = cords;
         hits++;
         if(hits >= length){
             sunk = true;
         }
     }
+
+    public String[] getHitsLocation(){ return hitCords; }
 
     public boolean isSunk(){ return sunk; }
 

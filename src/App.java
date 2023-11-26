@@ -11,7 +11,6 @@ public class App {
 
         game1.parseCord("A1");
         game1.startGame();
-        game1.makeGuess();
         // GameBoards.printAllBoards();
 
     }

@@ -1,7 +1,9 @@
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class GamePlay {
-    public String shipMode = "Patrol Search";
+    public String playMode = "Patrol Search";
+    public boolean inGame = true;
     public Ship patrolBoat, submarine, destroyer, battleship, carrier;
 
     public char[][] currentBoard = new char[10][10];
@@ -18,13 +20,22 @@ public class GamePlay {
                 currentBoard[i][j] = '~';
             }
         }
+
+        /// GAME LOOP \\\
+        while(!playMode.equals("endGame")){
+            System.out.println("continue game");
+            System.out.println("Game loop: " + playMode);
+            makeGuess();
+            System.out.println("end loop");
+
+        }
+
     }
 
     public void makeGuess(){
         int[] target = targetSelect();
         String gridCord = parseArray(target);
         Scanner input = new Scanner(System.in);
-
 
         System.out.println("Guess: " + gridCord);
         System.out.print("Did we hit? ");
@@ -35,7 +46,7 @@ public class GamePlay {
             String hitBoat = input.nextLine().toLowerCase();
             hit(hitBoat, gridCord, target);
         } else {
-            System.out.println(result.toLowerCase());
+            updateBoard(target, 'O');
         }
     }
 
@@ -46,26 +57,64 @@ public class GamePlay {
         switch(boatChar){
             case 'p':
             patrolBoat.gotHit(gridCord);
-            //did sink?
+            updateBoard(target, boatChar);
+            if(patrolBoat.isSunk()){ sunkBoat(patrolBoat);}
+            //clear impossible opens
             break;
             case 's':
             submarine.gotHit(gridCord);
+            updateBoard(target, boatChar);
+            if(submarine.isSunk()){ sunkBoat(submarine);}
             break;
             case 'd':
             destroyer.gotHit(gridCord);
+            updateBoard(target, boatChar);
+            if(destroyer.isSunk()){ sunkBoat(destroyer);}
             break;
             case 'b':
             battleship.gotHit(gridCord);
+            updateBoard(target, boatChar);
+            if(battleship.isSunk()){ sunkBoat(battleship);}
             break;
             case 'c':
             carrier.gotHit(gridCord);
+            updateBoard(target, boatChar);
+            if(carrier.isSunk()){ sunkBoat(carrier);}
             break;
             default:
             System.out.println("I'm not familiar with that boat...");
         }
     }
 
-    private void updateBoard(int[] target, String )
+    private void sunkBoat(Ship ship){
+        inGame = false;
+        playMode = "endGame";
+        System.out.println("The " + ship.name + " has been sunk!");
+        updateGameMode();
+    }
+    private void updateGameMode(){
+        if(patrolBoat.isSunk()){
+            playMode = "Sub Search";
+            if(submarine.isSunk() && destroyer.isSunk()){
+                playMode = "Battleship Search";
+                if(battleship.isSunk()){
+                    playMode = "Carrier Search";
+                    if(carrier.isSunk()){
+                        playMode = "endGame";
+                    }
+                }
+            }
+        }
+    }
+    private void updateBoard(int[] target, char targetResult){
+        currentBoard[target[0]][target[1]] = Character.toUpperCase(targetResult);
+        for(char[] row : currentBoard){
+            for(char Char: row){
+                System.out.print(Char);
+            }
+            System.out.println();
+        }
+    }
 
     public int[] parseCord(String cord){
         int[] arrayCord = new int[2];
@@ -151,18 +200,18 @@ public class GamePlay {
     }
 
     public String getMode(){
-        return shipMode;
+        return playMode;
     }
 
     private int[] targetSelect(){
         int[] target = new int[]{0,0};
         boolean searching = true;
-        char[][] targetBoard = GameBoards.getBoard(shipMode);
+        char[][] targetBoard = GameBoards.getBoard(playMode);
 
         while (searching){
-            int randY = (int)Math.floor(Math.random() * 10);
-            int randX = (int)Math.floor(Math.random() * 10);
-            if(targetBoard[randY][randX] == 'X' && currentBoard[randY][randX] == '~'){
+            int randX = (int)Math.floor(Math.random() * 10); //0
+            int randY = (int)Math.floor(Math.random() * 10); //5
+            if(targetBoard[randX][randY] == 'X' && currentBoard[randX][randY] == '~'){
                 target[0] = randX;
                 target[1] = randY;
                 searching = false;
