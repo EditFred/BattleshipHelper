@@ -1,6 +1,4 @@
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
-
 public class GamePlay {
     public String playMode = "Patrol Search";
     public boolean inGame = true;
@@ -27,9 +25,7 @@ public class GamePlay {
             System.out.println("Game loop: " + playMode);
             makeGuess();
             System.out.println("end loop");
-
         }
-
     }
 
     public void makeGuess(){
