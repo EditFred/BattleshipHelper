@@ -222,7 +222,7 @@ public class GamePlay {
         }
         return target;
     }
-
+/* 
     private int[] reTarget(){
         //horizontal vs vertical fit check
         //if both true random select
@@ -232,5 +232,5 @@ public class GamePlay {
 
         return 0,0;
     }
-
+*/
 }
