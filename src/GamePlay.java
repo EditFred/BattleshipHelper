@@ -1,8 +1,12 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 public class GamePlay {
     public String playMode = "Patrol Search";
     public boolean inGame = true;
     public Ship patrolBoat, submarine, destroyer, battleship, carrier;
+
+    private ArrayList<Ship> unSunkHitShips = new ArrayList<Ship>();
+    private Ship[] sunkHitShips;
 
     public char[][] currentBoard = new char[10][10];
 
@@ -54,6 +58,7 @@ public class GamePlay {
             case 'p':
             patrolBoat.gotHit(gridCord);
             updateBoard(target, boatChar);
+            if(!unSunkHitShips.contains(patrolBoat)){unSunkHitShips.add(patrolBoat);}
             if(patrolBoat.isSunk()){ sunkBoat(patrolBoat);}
             //clear impossible opens
             break;
@@ -87,6 +92,8 @@ public class GamePlay {
         playMode = "endGame";
         System.out.println("The " + ship.name + " has been sunk!");
         updateGameMode();
+        //real functions from here
+        unSunkHitShips.remove(ship);
     }
     private void updateGameMode(){
         if(patrolBoat.isSunk()){
@@ -216,6 +223,14 @@ public class GamePlay {
         return target;
     }
 
+    private int[] reTarget(){
+        //horizontal vs vertical fit check
+        //if both true random select
+        //if second hit, continue,
+        //if miss after second hit, change direction
+        
 
+        return 0,0;
+    }
 
 }

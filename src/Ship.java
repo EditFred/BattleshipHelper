@@ -6,6 +6,7 @@ public class Ship {
     public String name;
     private int length;
     private String[] hitCords;
+    private String orientation = "unknown";
 
     public Ship(String name){
         this.name = name;
@@ -42,8 +43,23 @@ public class Ship {
 
         hitCords[hits] = cords;
         hits++;
+        if (hits == 2){
+            setOrientation();
+        }
         if(hits >= length){
             sunk = true;
+        }
+    }
+
+    public String getOrientation(){
+        return orientation;
+    }
+
+    private void setOrientation(){
+        if(hitCords[0].charAt(0) == hitCords[1].charAt(0)){
+            orientation = "horizontal";
+        } else {
+            orientation = "vertical";
         }
     }
 
