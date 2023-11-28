@@ -238,11 +238,6 @@ public class GamePlay {
     }
 
     private int[] reTarget(Ship ship){
-        //horizontal vs vertical fit check
-        //if both true random select
-        //if second hit, continue,
-        //if miss after second hit, change direction
-        
         boolean retargeting = true;
         int[] firstHit = parseCord(ship.getHitsLocation()[0]);
         int[] target = firstHit;
@@ -251,31 +246,67 @@ public class GamePlay {
         System.out.println(ship.name + " is hit but not sunk");
 
 
-        if(ship.getOrientation().equals("unknown")){
-            //search up down etc
+        if(ship.getOrientation().equals("vertical")){
+            char[] directions = {'u', 'd'};
+            char direction = directions[(int)Math.floor(Math.random() * 2)];
+
+            while(retargeting){
+                if(direction == 'u'){
+                    newTarget = goUp(newTarget);
+                    if(outOfBounds(newTarget)){
+                        direction = turnAround(direction);
+                    } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
+                        retargeting = false;
+                    } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
+                        continue;
+                    } else {
+                        direction = turnAround(direction);
+                    }
+                } else {
+                    newTarget = goDown(newTarget);
+                    if(outOfBounds(newTarget)){
+                        direction = turnAround(direction);
+                    } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
+                        retargeting = false;
+                    } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
+                        continue;
+                    } else {
+                        direction = turnAround(direction);
+                    }
+                }
+            }
         } else if(ship.getOrientation().equals("horizontal")){
             char[] directions = {'r', 'l'};
             char direction = directions[(int)Math.floor(Math.random() * 2)];
 
             while(retargeting){
                 if(direction == 'r'){
-                    System.out.println("Going right");
-
-                    newTarget = goRight(target);
-                    if(!outOfBounds(newTarget) && currentBoard[newTarget[0]][newTarget[1]] == '~'){
+                    newTarget = goRight(newTarget);
+                    if(outOfBounds(newTarget)){
+                        direction = turnAround(direction);
+                    } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
                         retargeting = false;
+                    } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
+                        continue;
+                    } else {
+                        direction = turnAround(direction);
                     }
                 } else {
-                    newTarget = goLeft(target);
-                    System.out.println("Going left");
-                    if(!outOfBounds(newTarget) && currentBoard[newTarget[0]][newTarget[1]] == '~'){
+                    newTarget = goLeft(newTarget);
+                    if(outOfBounds(newTarget)){
+                        direction = turnAround(direction);
+                    } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
                         retargeting = false;
+                    } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
+                        continue;
+                    } else {
+                        direction = turnAround(direction);
                     }
                 }
             }
 
         } else {
-            //vertical
+            //mystery
         }
         
 
@@ -317,19 +348,12 @@ public class GamePlay {
     }
     private int[] goRight(int[] cord){
         int[] newCord = cord;
-                System.out.println("old cord " + newCord[0] + newCord[1]);
-
         newCord[1] = newCord[1]+1;
-                        System.out.println("new cord " + newCord[0] + newCord[1]);
-
         return newCord;
     }
     private int[] goLeft(int[] cord){
         int[] newCord = cord;
-        System.out.println("old cord " + newCord[0] + newCord[1]);
         newCord[1] = newCord[1]-1;
-                System.out.println("new cord " + newCord[0] + newCord[1]);
-
         return newCord;
     }
 

@@ -1,5 +1,6 @@
 public class Ship {
     public String name;
+    private char hitSignature;
     private int length;
 
     private int hits = 0;
@@ -14,22 +15,27 @@ public class Ship {
         switch(name){
             case "Patrol Boat":
             this.length = 2;
+            this.hitSignature = 'P';
             hitCords = new String[2];
             break;
             case "Submarine":
             this.length = 3;
+            this.hitSignature = 'S';
             hitCords = new String[3];
             break;
             case "Destroyer":
             this.length = 3;
+            this.hitSignature = 'D';
             hitCords = new String[3];
             break;
             case "Battleship":
             this.length = 4;
+            this.hitSignature = 'B';
             hitCords = new String[4];
             break;
             case "Carrier":
             this.length = 5;
+            this.hitSignature = 'C';
             hitCords = new String[5];
             break;
             default:
@@ -62,6 +68,8 @@ public class Ship {
             orientation = "vertical";
         }
     }
+
+    public char getHitSig() { return hitSignature; }
 
     public String[] getHitsLocation(){ return hitCords; }
 
