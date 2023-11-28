@@ -1,12 +1,12 @@
 public class Ship {
-    // private boolean hit = false;
+    public String name;
+    private int length;
+
     private int hits = 0;
     private boolean sunk = false;
 
-    public String name;
-    private int length;
     private String[] hitCords;
-    private String orientation = "unknown";
+    private String orientation = "horizontal";
 
     public Ship(String name){
         this.name = name;
