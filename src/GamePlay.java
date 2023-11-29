@@ -246,10 +246,11 @@ public class GamePlay {
         System.out.println(ship.name + " is hit but not sunk");
 
         if(ship.getOrientation().equals("unknown")){
-        //check here for h / v fit to pottentially set location
-        //use .length and '~' spaces in direction
-        // checkfit(char direction Ship ship)
-        //then continue;
+            if(!checkfit('v', ship)){
+                ship.setOrientation("horizontal");
+            } else if(!checkfit('h', ship)) {
+                ship.setOrientation("vertical");
+            }
         }
 
         if(ship.getOrientation().equals("vertical")){
@@ -363,7 +364,7 @@ public class GamePlay {
         return newCord;
     }
 
-    
+
     /* MASSIVE BUT IMPORTANT FUNCTION: checks if a ship can fit before making a valid guess */
 
     private boolean checkfit(char direction, Ship ship){

@@ -50,7 +50,7 @@ public class Ship {
         hitCords[hits] = cords;
         hits++;
         if (hits == 2){
-            setOrientation();
+            setOrientationFromHits();
         }
         if(hits >= length){
             sunk = true;
@@ -61,13 +61,15 @@ public class Ship {
         return orientation;
     }
 
-    private void setOrientation(){
+    private void setOrientationFromHits(){
         if(hitCords[0].charAt(0) == hitCords[1].charAt(0)){
             orientation = "horizontal";
         } else {
             orientation = "vertical";
         }
     }
+
+    public void setOrientation(String orientation) { this.orientation = orientation ; }
 
     public char getHitSig() { return hitSignature; }
 
