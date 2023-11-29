@@ -7,7 +7,7 @@ public class Ship {
     private boolean sunk = false;
 
     private String[] hitCords;
-    private String orientation = "horizontal";
+    private String orientation = "unknown";
 
     public Ship(String name){
         this.name = name;
