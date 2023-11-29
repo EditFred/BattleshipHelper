@@ -245,6 +245,12 @@ public class GamePlay {
 
         System.out.println(ship.name + " is hit but not sunk");
 
+        if(ship.getOrientation().equals("unknown")){
+        //check here for h / v fit to pottentially set location
+        //use .length and '~' spaces in direction
+        // checkfit(char direction Ship ship)
+        //then continue;
+        }
 
         if(ship.getOrientation().equals("vertical")){
             char[] directions = {'u', 'd'};
@@ -355,6 +361,135 @@ public class GamePlay {
         int[] newCord = cord;
         newCord[1] = newCord[1]-1;
         return newCord;
+    }
+
+    
+    /* MASSIVE BUT IMPORTANT FUNCTION: checks if a ship can fit before making a valid guess */
+
+    private boolean checkfit(char direction, Ship ship){
+        int needed = ship.getLength() -1;
+        int open = 0;
+        boolean checking = true;
+        int[] firstHit = parseCord(ship.getHitsLocation()[0]);
+        int[] nextCheck = firstHit;
+
+        switch (direction){
+            case 'h':
+                boolean rightOpen = true;
+                while (checking){
+                    if(rightOpen){
+                        nextCheck = goRight(nextCheck);
+                        if(outOfBounds(nextCheck)){
+                            nextCheck = firstHit;
+                            rightOpen = false;
+                        } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+                            open++;
+                            continue;
+                        } else {
+                            nextCheck = firstHit;
+                            rightOpen = false;
+                        }
+                    } else {
+                        nextCheck = goLeft(nextCheck);
+                        if(outOfBounds(nextCheck)){
+                            checking = false;
+                            break;
+                        } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+                            open++;
+                            continue;
+                        } else {
+                            checking = false;
+                            break;
+                        }
+                    }
+                }
+                return open >= needed;
+
+            case 'v':
+                while (checking){
+                    boolean upOpen = true;
+                        if(upOpen){
+                            nextCheck = goUp(nextCheck);
+                            if(outOfBounds(nextCheck)){
+                                nextCheck = firstHit;
+                                upOpen = false;
+                            } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+                                open++;
+                                continue;
+                            } else {
+                                nextCheck = firstHit;
+                                upOpen = false;
+                            }
+                        } else {
+                            nextCheck = goDown(nextCheck);
+                            if(outOfBounds(nextCheck)){
+                                checking = false;
+                                break;
+                            } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+                                open++;
+                                continue;
+                            } else {
+                                checking = false;
+                                break;
+                            }
+                        }
+                    }
+                    return open >= needed;
+            case 'u':
+                while (checking){
+                    nextCheck = goUp(nextCheck);
+                    if(outOfBounds(nextCheck)){
+                        checking = false;
+                    } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+                        open++;
+                        continue;
+                    } else {
+                        checking = false;
+                    }
+                }
+                return open >= needed;
+            case 'd':
+                while (checking){
+                    nextCheck = goDown(nextCheck);
+                    if(outOfBounds(nextCheck)){
+                        checking = false;
+                    } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+                        open++;
+                        continue;
+                    } else {
+                        checking = false;
+                    }
+                }
+                return open >= needed;
+            case 'l':
+                while (checking){
+                    nextCheck = goLeft(nextCheck);
+                    if(outOfBounds(nextCheck)){
+                        checking = false;
+                    } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+                        open++;
+                        continue;
+                    } else {
+                        checking = false;
+                    }
+                }
+                return open >= needed;
+            case 'r':
+                while (checking){
+                    nextCheck = goRight(nextCheck);
+                    if(outOfBounds(nextCheck)){
+                        checking = false;
+                    } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+                        open++;
+                        continue;
+                    } else {
+                        checking = false;
+                    }
+                }
+                return open >= needed;
+            default:
+            return true;
+        }
     }
 
     //can fit vertical up

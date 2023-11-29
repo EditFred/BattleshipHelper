@@ -75,4 +75,5 @@ public class Ship {
 
     public boolean isSunk(){ return sunk; }
 
+    public int getLength(){ return length; }
 }
