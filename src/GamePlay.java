@@ -25,10 +25,8 @@ public class GamePlay {
 
         /// GAME LOOP \\\
         while(!playMode.equals("endGame")){
-            System.out.println("continue game");
-            System.out.println("Game loop: " + playMode);
+            // System.out.println("Game loop: " + playMode);
             makeGuess();
-            System.out.println("end loop");
         }
     }
 
@@ -37,12 +35,13 @@ public class GamePlay {
         String gridCord = parseArray(target);
         Scanner input = new Scanner(System.in);
 
+        System.out.println();
         System.out.println("Guess: " + gridCord);
         System.out.print("Did we hit? ");
         String result = input.nextLine().toLowerCase();
 
         if(result.equals("y") || result.equals("yes")){
-            System.out.println("which boat?");
+            System.out.print("which boat?");
             String hitBoat = input.nextLine().toLowerCase();
             hit(hitBoat, gridCord, target);
         } else {
@@ -54,7 +53,6 @@ public class GamePlay {
     
     private void hit(String hitBoatResult, String gridCord, int[] target){
         char boatChar = hitBoatResult.charAt(0);
-        Boolean sunk;
         switch(boatChar){
             case 'p':
             patrolBoat.gotHit(gridCord);
@@ -93,14 +91,13 @@ public class GamePlay {
     }
 
     private void sunkBoat(Ship ship){
-        System.out.println("The " + ship.name + " has been sunk!");
         updateGameMode();
         //real functions from here
         unSunkHitShips.remove(ship);
         sunkShips.add(ship);
         if(sunkShips.size() == 5){
             playMode = "endGame";
-            System.out.println("That's a wrap! GG");
+            System.out.println("That's a wrap, GG!");
         }
     }
     private void updateGameMode(){
@@ -119,12 +116,14 @@ public class GamePlay {
     }
     private void updateBoard(int[] target, char targetResult){
         currentBoard[target[0]][target[1]] = Character.toUpperCase(targetResult);
+        /* 
         for(char[] row : currentBoard){
             for(char Char: row){
                 System.out.print(Char);
             }
             System.out.println();
         }
+        */
     }
 
     public int[] parseCord(String cord){
@@ -240,15 +239,10 @@ public class GamePlay {
         int[] target = firstHit;
         int[] newTarget = target;
 
-        System.out.println("Retargeting " + ship.name );
-
         if(ship.getOrientation().equals("unknown")){
-            System.out.println("checking for orientation fit");
             if(!checkFit('v', ship)){
-                System.out.println("Does not fit vertical");
                 ship.setOrientation("horizontal");
             } else if(!checkFit('h', ship)) {
-                System.out.println("Does not fit horizontal");
                 ship.setOrientation("vertical");
             }
         }
@@ -263,6 +257,8 @@ public class GamePlay {
                     retargeting = false;
                 } else {
                     direction = turnAround(direction);
+                    newTarget = goFromRandom(direction, target);
+                    retargeting = false;
                 }
             }
         } else if(ship.getOrientation().equals("vertical")){
@@ -314,7 +310,7 @@ public class GamePlay {
                     newTarget = goLeft(newTarget);
                     if(outOfBounds(newTarget)){
                         direction = turnAround(direction);
-                    } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
+                    }else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
                         retargeting = false;
                     } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
                         continue;
@@ -401,8 +397,6 @@ public class GamePlay {
         int[] firstHit = parseCord(ship.getHitsLocation()[0]);
         int[] nextCheck = {firstHit[0], firstHit[1]};
 
-        System.out.println("First hit is " + firstHit[0] + firstHit[1]);
-
         switch (direction){
             case 'h':
                 boolean rightOpen = true;
@@ -412,8 +406,6 @@ public class GamePlay {
                         if(outOfBounds(nextCheck)){
                             nextCheck[0] = firstHit[0];
                             nextCheck[1] = firstHit[1];
-                            System.out.println("Should be " + firstHit[0] + firstHit[1]);
-                            System.out.println("Back to first hit " + nextCheck[0] + nextCheck[1]);
                             rightOpen = false;
                         } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
                             open++;
@@ -422,7 +414,6 @@ public class GamePlay {
                             nextCheck[0] = firstHit[0];
                             nextCheck[1] = firstHit[1];
                             rightOpen = false;
-                            System.out.println("going left (inside checkFit)");
                         }
                     } else {
                         nextCheck = goLeft(nextCheck);
@@ -433,13 +424,11 @@ public class GamePlay {
                             open++;
                             continue;
                         } else {
-                            System.out.println("done left");
                             checking = false;
                             break;
                         }
                     }
                 }
-                System.out.println("returning " + (open >= needed));
                 return open >= needed;
 
             case 'v':
@@ -450,8 +439,6 @@ public class GamePlay {
                         if(outOfBounds(nextCheck)){
                             nextCheck[0] = firstHit[0];
                             nextCheck[1] = firstHit[1];
-                            System.out.println("Should be " + firstHit[0] + firstHit[1]);
-                            System.out.println("Back to first hit " + nextCheck[0] + nextCheck[1]);
                             upOpen = false;
                         } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
                             open++;
@@ -460,7 +447,6 @@ public class GamePlay {
                             nextCheck[0] = firstHit[0];
                             nextCheck[1] = firstHit[1];
                             upOpen = false;
-                            System.out.println("going down (inside checkFit)");
                         }
                     } else {
                         nextCheck = goDown(nextCheck);
@@ -471,13 +457,11 @@ public class GamePlay {
                             open++;
                             continue;
                         } else {
-                            System.out.println("done down");
                             checking = false;
                             break;
                         }
                     }
                 }
-                    System.out.println("returning " + (open >= needed));
                     return open >= needed;
             case 'u':
                 while (checking){
@@ -491,7 +475,6 @@ public class GamePlay {
                         checking = false;
                     }
                 }
-                System.out.println("Needs: " + needed + " Open: " + open);
                 return open >= needed;
             case 'd':
                 while (checking){
@@ -505,7 +488,6 @@ public class GamePlay {
                         checking = false;
                     }
                 }
-                System.out.println("Needs: " + needed + " Open: " + open);
                 return open >= needed;
             case 'l':
                 while (checking){
@@ -519,7 +501,6 @@ public class GamePlay {
                         checking = false;
                     }
                 }
-                System.out.println("Needs: " + needed + " Open: " + open);
                 return open >= needed;
             case 'r':
                 while (checking){
@@ -533,18 +514,10 @@ public class GamePlay {
                         checking = false;
                     }
                 }
-                System.out.println("Needs: " + needed + " Open: " + open);
                 return open >= needed;
             default:
             return true;
         }
     }
-
-    //can fit vertical up
-    //can fit horizontal
-    //can go up
-    //can go down
-    //can go right
-    //can go left
 
 }

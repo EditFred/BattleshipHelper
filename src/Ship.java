@@ -45,8 +45,6 @@ public class Ship {
     }
 
     public void gotHit(String cords){
-        System.out.println(name + " got hit at " + cords);
-
         hitCords[hits] = cords;
         hits++;
         if (hits == 2){
@@ -54,6 +52,9 @@ public class Ship {
         }
         if(hits >= length){
             sunk = true;
+            System.out.println("We sunk the " + name + "!");
+        } else {
+            System.out.println("The " + name + " has been hit!");
         }
     }
 
