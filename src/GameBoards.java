@@ -70,6 +70,15 @@ public class GameBoards {
         printBoard(everyFive);
     }
 
+    private static void reMapTargetBoard(){
+        char[][] twoA = new char[10][10];
+    }
+
+
+
+
+
+
     public static char[][] getBoard(String gamePhase){
         switch (gamePhase){
             case "Patrol Search":

@@ -92,7 +92,7 @@ public class GamePlay {
 
     private void sunkBoat(Ship ship){
         updateGameMode();
-        //real functions from here
+        clearTooSmallCavities();
         unSunkHitShips.remove(ship);
         sunkShips.add(ship);
         if(sunkShips.size() == 5){
@@ -240,9 +240,9 @@ public class GamePlay {
         int[] newTarget = target;
 
         if(ship.getOrientation().equals("unknown")){
-            if(!checkFit('v', ship)){
+            if(!checkFit('v', parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)){
                 ship.setOrientation("horizontal");
-            } else if(!checkFit('h', ship)) {
+            } else if(!checkFit('h', parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)) {
                 ship.setOrientation("vertical");
             }
         }
@@ -252,7 +252,7 @@ public class GamePlay {
             char direction = directions[direcIndex];
 
             while(retargeting){
-                if(checkFit(direction, ship)){
+                if(checkFit(direction, parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)){
                     newTarget = goFromRandom(direction, target);
                     retargeting = false;
                 } else {
@@ -387,14 +387,62 @@ public class GamePlay {
         return newCord;
     }
 
+    private void clearTooSmallCavities(){
+        //takes remaining smallest ship and checks every unhit board tile to see if ship can fit
+        int [] unShotTile = new int[2];
+        int fitLength;
+        switch(playMode){
+            case "Patrol Search":
+                fitLength = 1;
+                break;
+            case "Sub Search":
+                fitLength = 2;
+                break;
+            case "Battleship Search":
+                fitLength = 3;
+                break;
+            case "Carrier Search":
+                fitLength = 4;
+                break;
+            default:
+                fitLength = 1;
+                break;
+        }
+
+        for(int i = 0; i < currentBoard.length; i++){
+            for(int j = 0; j < currentBoard[i].length; j++){
+                if(currentBoard[i][j] == '~'){
+                    unShotTile[0] = i;
+                    unShotTile[1] = j;
+                    if(!checkFit('h', unShotTile, fitLength) && !checkFit('v', unShotTile, fitLength)){
+                        currentBoard[i][j] = 'O';
+                    }
+                }
+            }
+        }
+    //     for(char[] row : currentBoard){
+    //         for(char Char: row){
+    //             System.out.print(Char);
+    //         }
+    //         System.out.println();
+    //     }
+
+    }
+
+    // REMAP for efficiency
+
+    private void reMapTargetBoard(){
+        
+    }
 
     /* MASSIVE BUT IMPORTANT FUNCTION: checks if a ship can fit before making a valid guess */
 
-    private boolean checkFit(char direction, Ship ship){
-        int needed = ship.getLength() - 1;
+    private boolean checkFit(char direction, int[] startCord, int lengthNeeded){
+        int needed = lengthNeeded;
         int open = 0;
         boolean checking = true;
-        int[] firstHit = parseCord(ship.getHitsLocation()[0]);
+        // int[] firstHit2 = parseCord(ship.getHitsLocation()[0]);
+        int[] firstHit = startCord;
         int[] nextCheck = {firstHit[0], firstHit[1]};
 
         switch (direction){
