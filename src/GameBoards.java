@@ -76,8 +76,8 @@ public class GameBoards {
         /* The purpose of this function is to create alternate maps that will be needed to remap the current target board,
          * as there may be a more efficient path, the most efficient path changes according to hits/misses once the program starts to
          * find the boats on the field. New Maps are create for all sizes. Every 2, 3, 4, and 5.
-         * BUT this time an additinal map is create for each available offset.
-         * everyTwo, has one additional offset, everyThree has two additional offsets, everyFour has three, and everyFive has four. 
+         * BUT this time an additional map is create for each possible offset.
+         * everyTwo, has one additional offset, everyThree has two possible offsets, everyFour has three, and everyFive has four. 
          * To help understand how these maps are generated. We start Basic, and get more and more efficient as we progress down the function.
          */
 

@@ -9,8 +9,11 @@ public class App {
         SayHello intro = new SayHello(name);
         GamePlay game1 = new GamePlay();
 
-        GameBoards.reMapTargetBoard();
+        // GameBoards.reMapTargetBoard();
 
+        TargettingMaps target = new TargettingMaps();
+
+        GameBoards.printAllBoards();
         game1.parseCord("A1");
         game1.startGame();
         // GameBoards.printAllBoards();
