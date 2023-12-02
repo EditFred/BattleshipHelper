@@ -13,6 +13,8 @@ public class TargettingMaps {
         generateEveryPossibleTargetBoard();
         targetBoard = GameBoards.getBoard("Patrol Search");
 
+        findZones(testBoard);
+
     }
     
 
@@ -143,17 +145,150 @@ public class TargettingMaps {
         }
     }
 
-    private void reGenerateTargettingBoard(int[][] currentBoard){
-        ArrayList<ArrayList<Integer[]>> zones = new ArrayList<ArrayList<Integer[]>>();
+    private void reGenerateTargettingBoard(char[][] currentBoard){
+        ArrayList<ArrayList<int[]>> zones = new ArrayList<ArrayList<int[]>>();
 
     }
 
-    private void findZoneBestMap(int[][] zone){
+    private void findZones(char[][] currentBoard){
+        ArrayList<ArrayList<int[]>> zones = new ArrayList<ArrayList<int[]>>();
+        char[][] copyBoard = new char[10][10];
 
+        for(int i = 0; i < 10; i++){
+            for(int j = 0; j < 10; j++){
+                copyBoard[i][j] = currentBoard[i][j];
+            }
+        }
+
+
+        int currentZone = 0;
+        for(int i = 0; i < 10; i++){
+            for(int j = 0; j < 10; j++){
+                if(copyBoard[i][j] == '~'){
+                    ArrayList<int[]>  zone = new ArrayList<int[]>();
+                    int[] cords = {i,j};
+                    zone.add(cords);
+                    copyBoard[i][j] = (char)((currentZone + 1) +'0');
+                    System.out.println("At Cord " + i + j);
+                    for(int k = 0; k < zone.size(); k++){
+                        System.out.println("checking surroundings " + (char)((currentZone + 1) +'0'));
+                        System.out.println("Zone size before checksurround: " + zone.size());
+                        checkSurrounding(zone.get(k), zone, copyBoard, (char)((currentZone + 1) +'0'));
+                        System.out.println("Zone size after checksurround: " + zone.size());
+                    }
+                    currentZone++;
+                }
+            }
+        }
+
+        printBoard(copyBoard);
     }
 
+    private char[][] findZoneBestMap(String searchMode, ArrayList<int[]> zone){
+        char[][][] mapBook;
+        switch(searchMode){
+            case "Patrol Search":
+                mapBook = everyTwoMaps;
+                break;
+            case "Sub Search":
+                mapBook = everyThreeMaps;
+                break;
+            case "Battleship Search":
+                mapBook = everyFourMaps;
+                break;
+            case "Carrier Search":
+                mapBook = everyFiveMaps;
+                break;
+            default:
+                mapBook = everyTwoMaps;
+                break;
+        }
 
-    private static void printBoard(char[][] board){
+        int targetsNeeded = 0;
+        int mapIndex = 0;
+
+        for(char[][] map : mapBook){
+            int targets = 0;
+            for(int i = 0; i < zone.size(); i++){
+
+            }
+        }
+
+
+
+
+
+
+
+        return mapBook[0];
+    }
+
+    private boolean inBounds(int[] nextTarget){
+        for(int n : nextTarget){
+            if(n < 0 || n > 9){
+                return false;
+            }
+        }
+        return true;
+    }
+    private int[] goUp(int[] cord){
+        int[] newCord = new int[2];
+        newCord[0] = cord[0]-1;
+        newCord[1] = cord[1];
+        return newCord;
+    }
+    private int[] goDown(int[] cord){
+        int[] newCord = new int[2];
+        newCord[0] = cord[0]+1;
+        newCord[1] = cord[1];
+        return newCord;
+    }
+    private int[] goRight(int[] cord){
+        int[] newCord = new int[2];
+        newCord[0] = cord[0];
+        newCord[1] = cord[1]+1;
+        return newCord;
+    }
+    private int[] goLeft(int[] cord){
+        int[] newCord = new int[2];
+        newCord[0] = cord[0];
+        newCord[1] = cord[1]-1;
+        return newCord;
+    }
+
+    private void checkSurrounding(int[] cord, ArrayList<int[]> currentZone, char[][] boardCopy, char zoneCount){
+        int[] up, down, right, left = new int[2];
+        up = goUp(cord);
+        down = goDown(cord);
+        right = goRight(cord);
+        left = goLeft(cord);
+        // System.out.println("Array list sizes");
+        // System.out.println(currentZone.size());
+        System.out.println("Base cord " + cord[0] + cord[1]);
+
+
+        if(inBounds(up) && boardCopy[up[0]][up[1]] == '~'){
+            System.out.println("INSIDE UP");
+            currentZone.add(up);
+            boardCopy[up[0]][up[1]] = zoneCount;
+        }
+        if(inBounds(down) && boardCopy[down[0]][down[1]] == '~'){
+            currentZone.add(down);
+            boardCopy[down[0]][down[1]] = zoneCount;
+        }
+        if(inBounds(right) && boardCopy[right[0]][right[1]] == '~'){
+            currentZone.add(right);
+            boardCopy[right[0]][right[1]] = zoneCount;
+        }
+        if(inBounds(left) && boardCopy[left[0]][left[1]] == '~'){
+            currentZone.add(left);
+            boardCopy[left[0]][left[1]] = zoneCount;
+        };
+        // System.out.println(currentZone.size());
+        // printBoard(boardCopy);
+    }
+
+    private void printBoard(char[][] board){
         for(char[] row : board){
             for(char Char: row){
                 System.out.print(Char);
@@ -161,4 +296,18 @@ public class TargettingMaps {
             System.out.println();
         }
     }
+
+
+    private char[][] testBoard = {
+        {'X','~', '~', 'X', '~', '~', '~', '~', 'X', '~'},
+        {'X','X', '~', '~', '~', '~', '~', '~', '~', '~'},
+        {'X','~', 'X', '~', '~', '~', '~', 'X', 'X', '~'},
+        {'X','~', '~', 'X', 'X', 'X', 'X', '~', 'X', '~'},
+        {'X','~', '~', 'X', '~', 'X', '~', '~', 'X', 'X'},
+        {'X','~', '~', 'X', '~', 'X', '~', '~', 'X', '~'},
+        {'X','~', '~', 'X', '~', '~', 'X', '~', 'X', '~'},
+        {'X','~', '~', 'X', '~', 'X', '~', '~', 'X', '~'},
+        {'X','~', '~', 'X', 'X', '~', '~', '~', 'X', '~'},
+        {'X','~', '~', 'X', '~', '~', '~', '~', 'X', '~'},
+    };
 }

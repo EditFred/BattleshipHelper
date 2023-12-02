@@ -13,7 +13,7 @@ public class App {
 
         TargettingMaps target = new TargettingMaps();
 
-        GameBoards.printAllBoards();
+        // GameBoards.printAllBoards();
         game1.parseCord("A1");
         game1.startGame();
         // GameBoards.printAllBoards();
