@@ -169,13 +169,10 @@ public class TargettingMaps {
                     int[] cords = {i,j};
                     zone.add(cords);
                     copyBoard[i][j] = (char)((currentZone + 1) +'0');
-                    System.out.println("At Cord " + i + j);
                     for(int k = 0; k < zone.size(); k++){
-                        System.out.println("checking surroundings " + (char)((currentZone + 1) +'0'));
-                        System.out.println("Zone size before checksurround: " + zone.size());
                         checkSurrounding(zone.get(k), zone, copyBoard, (char)((currentZone + 1) +'0'));
-                        System.out.println("Zone size after checksurround: " + zone.size());
                     }
+                    zones.add(zone);
                     currentZone++;
                 }
             }
@@ -262,13 +259,8 @@ public class TargettingMaps {
         down = goDown(cord);
         right = goRight(cord);
         left = goLeft(cord);
-        // System.out.println("Array list sizes");
-        // System.out.println(currentZone.size());
-        System.out.println("Base cord " + cord[0] + cord[1]);
-
 
         if(inBounds(up) && boardCopy[up[0]][up[1]] == '~'){
-            System.out.println("INSIDE UP");
             currentZone.add(up);
             boardCopy[up[0]][up[1]] = zoneCount;
         }
@@ -284,8 +276,6 @@ public class TargettingMaps {
             currentZone.add(left);
             boardCopy[left[0]][left[1]] = zoneCount;
         };
-        // System.out.println(currentZone.size());
-        // printBoard(boardCopy);
     }
 
     private void printBoard(char[][] board){
