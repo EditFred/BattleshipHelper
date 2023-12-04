@@ -9,6 +9,7 @@ public class GamePlay {
     private ArrayList<Ship> sunkShips = new ArrayList<Ship>();
 
     public char[][] currentBoard = new char[10][10];
+    TargettingMaps radar = new TargettingMaps();
 
     public void startGame(){
         patrolBoat = new Ship("Patrol Boat");
@@ -93,6 +94,8 @@ public class GamePlay {
     private void sunkBoat(Ship ship){
         updateGameMode();
         clearTooSmallCavities();
+        radar.reGenerateTargettingBoard(currentBoard, playMode);
+        
         unSunkHitShips.remove(ship);
         sunkShips.add(ship);
         if(sunkShips.size() == 5){
@@ -216,7 +219,8 @@ public class GamePlay {
     private int[] targetSelect(){
         int[] target = new int[]{0,0};
         boolean searching = true;
-        char[][] targetBoard = GameBoards.getBoard(playMode);
+        // char[][] targetBoard = GameBoards.getBoard(playMode);
+        char[][] targetBoard = GameBoards.getNewTargetMap();
         if(unSunkHitShips.size() > 0){
             target = reTarget(unSunkHitShips.get(0));
         } else {
@@ -432,7 +436,7 @@ public class GamePlay {
     // REMAP for efficiency
 
     private void reMapTargetBoard(){
-        
+
     }
 
     /* MASSIVE BUT IMPORTANT FUNCTION: checks if a ship can fit before making a valid guess */

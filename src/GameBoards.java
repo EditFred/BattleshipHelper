@@ -1,4 +1,17 @@
 public class GameBoards {
+    private static char[][] targetMap = {
+        {'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O'},
+        {'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'},
+        {'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O'},
+        {'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'},
+        {'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O'},
+        {'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'},
+        {'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O'},
+        {'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'},
+        {'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O'},
+        {'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'}
+    };
+
     private static char[][] everyTwo = {
         {'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O'},
         {'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'},
@@ -217,8 +230,14 @@ public class GameBoards {
  
 
 
+    public static void reMapTargetMap(int[] cordinates, char[][] newTargetMap){
+        targetMap[cordinates[0]][cordinates[1]] = newTargetMap[cordinates[0]][cordinates[1]];
+    }
 
 
+    public static char[][] getNewTargetMap(){
+        return targetMap;
+    }
 
     public static char[][] getBoard(String gamePhase){
         switch (gamePhase){

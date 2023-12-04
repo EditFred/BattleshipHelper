@@ -13,7 +13,7 @@ public class TargettingMaps {
         generateEveryPossibleTargetBoard();
         targetBoard = GameBoards.getBoard("Patrol Search");
 
-        findZones(testBoard);
+        findZones(testBoard, "Patrol Search");
 
     }
     
@@ -145,12 +145,16 @@ public class TargettingMaps {
         }
     }
 
-    private void reGenerateTargettingBoard(char[][] currentBoard){
-        ArrayList<ArrayList<int[]>> zones = new ArrayList<ArrayList<int[]>>();
+    public void reGenerateTargettingBoard(char[][] currentBoard, String searchMode){
+        ArrayList<ArrayList<int[]>> zones = findZones(currentBoard, searchMode);
 
+        for(int i = 0; i < zones.size(); i++){
+            char[][] bestMap = findZoneBestMap(searchMode, zones.get(i));
+            adjustTargetMap(bestMap, zones.get(i));
+        }
     }
 
-    private void findZones(char[][] currentBoard){
+    private ArrayList<ArrayList<int[]>> findZones(char[][] currentBoard,  String searchMode){
         ArrayList<ArrayList<int[]>> zones = new ArrayList<ArrayList<int[]>>();
         char[][] copyBoard = new char[10][10];
 
@@ -159,7 +163,6 @@ public class TargettingMaps {
                 copyBoard[i][j] = currentBoard[i][j];
             }
         }
-
 
         int currentZone = 0;
         for(int i = 0; i < 10; i++){
@@ -177,8 +180,7 @@ public class TargettingMaps {
                 }
             }
         }
-
-        printBoard(copyBoard);
+        return zones;
     }
 
     private char[][] findZoneBestMap(String searchMode, ArrayList<int[]> zone){
@@ -201,23 +203,32 @@ public class TargettingMaps {
                 break;
         }
 
-        int targetsNeeded = 0;
-        int mapIndex = 0;
+        int bestMapTargetsNeeded = 100;
+        int bestMapIndex = 0;
+
+        int currentMapIndex = 0;
 
         for(char[][] map : mapBook){
             int targets = 0;
             for(int i = 0; i < zone.size(); i++){
-
+                int [] cord = zone.get(i);
+                if(map[cord[0]][cord[1]] == 'X'){
+                    targets++;
+                }
             }
+            if(targets < bestMapTargetsNeeded){
+                bestMapTargetsNeeded = targets;
+                bestMapIndex = currentMapIndex;
+            }
+            currentMapIndex++;
         }
+        return mapBook[bestMapIndex];
+    }
 
-
-
-
-
-
-
-        return mapBook[0];
+    private void adjustTargetMap(char[][] bestMap, ArrayList<int[]> zone){
+        for(int i = 0; i < zone.size(); i++){
+            GameBoards.reMapTargetMap(zone.get(i), bestMap);
+        }
     }
 
     private boolean inBounds(int[] nextTarget){
