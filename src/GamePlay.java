@@ -95,7 +95,7 @@ public class GamePlay {
         updateGameMode();
         clearTooSmallCavities();
         radar.reGenerateTargettingBoard(currentBoard, playMode);
-        
+
         unSunkHitShips.remove(ship);
         sunkShips.add(ship);
         if(sunkShips.size() == 5){
@@ -106,10 +106,13 @@ public class GamePlay {
     private void updateGameMode(){
         if(patrolBoat.isSunk()){
             playMode = "Sub Search";
+            radar.setMapBookPage(1);
             if(submarine.isSunk() && destroyer.isSunk()){
                 playMode = "Battleship Search";
+                radar.setMapBookPage(2);
                 if(battleship.isSunk()){
                     playMode = "Carrier Search";
+                    radar.setMapBookPage(3);
                     if(carrier.isSunk()){
                         playMode = "endGame";
                     }
@@ -212,15 +215,16 @@ public class GamePlay {
         return Cord;
     }
 
-    public String getMode(){
-        return playMode;
-    }
+    // public String getMode(){
+    //     return playMode;
+    // }
 
     private int[] targetSelect(){
         int[] target = new int[]{0,0};
         boolean searching = true;
         // char[][] targetBoard = GameBoards.getBoard(playMode);
-        char[][] targetBoard = GameBoards.getNewTargetMap();
+        // char[][] targetBoard = GameBoards.getNewTargetMap();
+        char [][] targetBoard = radar.getTargetMap();
         if(unSunkHitShips.size() > 0){
             target = reTarget(unSunkHitShips.get(0));
         } else {
