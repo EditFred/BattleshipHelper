@@ -127,7 +127,6 @@ public class TargettingMaps {
     private void adjustTargetMap(char[][] bestMap, ArrayList<int[]> zone){
         for(int i = 0; i < zone.size(); i++){
             int[] cordinates = zone.get(i);
-            // GameBoards.reMapTargetMap(zone.get(i), bestMap);
             targetBoard[cordinates[0]][cordinates[1]] = bestMap[cordinates[0]][cordinates[1]];
         }
     }
@@ -187,7 +186,7 @@ public class TargettingMaps {
         if(inBounds(left) && boardCopy[left[0]][left[1]] == '~'){
             currentZone.add(left);
             boardCopy[left[0]][left[1]] = zoneCount;
-        };
+        }
     }
 
     private void printBoard(char[][] board){
@@ -199,8 +198,6 @@ public class TargettingMaps {
         }
         System.out.println();
     }
-
-
     private void printZone(ArrayList<int[]> zone){
 
             System.out.println("Zone :");

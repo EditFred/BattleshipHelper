@@ -122,14 +122,6 @@ public class GamePlay {
     }
     private void updateBoard(int[] target, char targetResult){
         currentBoard[target[0]][target[1]] = Character.toUpperCase(targetResult);
-        /* 
-        for(char[] row : currentBoard){
-            for(char Char: row){
-                System.out.print(Char);
-            }
-            System.out.println();
-        }
-        */
     }
 
     public int[] parseCord(String cord){
@@ -215,15 +207,9 @@ public class GamePlay {
         return Cord;
     }
 
-    // public String getMode(){
-    //     return playMode;
-    // }
-
     private int[] targetSelect(){
         int[] target = new int[]{0,0};
         boolean searching = true;
-        // char[][] targetBoard = GameBoards.getBoard(playMode);
-        // char[][] targetBoard = GameBoards.getNewTargetMap();
         char [][] targetBoard = radar.getTargetMap();
         if(unSunkHitShips.size() > 0){
             target = reTarget(unSunkHitShips.get(0));
@@ -396,7 +382,7 @@ public class GamePlay {
     }
 
     private void clearTooSmallCavities(){
-        //takes remaining smallest ship and checks every unhit board tile to see if ship can fit
+        //Takes remaining smallest ship and checks every unhit board tile to see if ship can fit
         int [] unShotTile = new int[2];
         int fitLength;
         switch(playMode){
@@ -428,20 +414,8 @@ public class GamePlay {
                 }
             }
         }
-    //     for(char[] row : currentBoard){
-    //         for(char Char: row){
-    //             System.out.print(Char);
-    //         }
-    //         System.out.println();
-    //     }
-
     }
 
-    // REMAP for efficiency
-
-    private void reMapTargetBoard(){
-
-    }
 
     /* MASSIVE BUT IMPORTANT FUNCTION: checks if a ship can fit before making a valid guess */
 
@@ -449,7 +423,6 @@ public class GamePlay {
         int needed = lengthNeeded;
         int open = 0;
         boolean checking = true;
-        // int[] firstHit2 = parseCord(ship.getHitsLocation()[0]);
         int[] firstHit = startCord;
         int[] nextCheck = {firstHit[0], firstHit[1]};
 
