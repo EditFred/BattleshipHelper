@@ -15,21 +15,18 @@ public class PlayingBoard {
 
 
     public void removeTooSmallCavities(){
-        System.out.println("Smallest ship: " + smallestShip);
         int [] unShotTile = new int[2];
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board[i].length; j++){
                 if(board[i][j] == '~'){
                     unShotTile[0] = i;
                     unShotTile[1] = j;
-                    if(!TargetSelect.checkFit('h', unShotTile, smallestShip, board) && !TargetSelect.checkFit('v', unShotTile, smallestShip-1, board)){
+                    if(!TargetSelect.checkFit('h', unShotTile, smallestShip-, board) && !TargetSelect.checkFit('v', unShotTile, smallestShip-1, board)){
                         board[i][j] = 'O';
                     }
                 }
             }
         }
-        System.out.println("exiting");
-        TargetSelect.printBoard(board);
     }
 
     public void updateBoard(int[] cordinate, char targetResult){

@@ -109,7 +109,6 @@ public class GamePlay {
         sunkShips.add(ship);
         if(sunkShips.size() == 5){
             playMode = "endGame";
-            System.out.println("That's a wrap, GG!");
         }
     }
     private void updateGameMode(){
