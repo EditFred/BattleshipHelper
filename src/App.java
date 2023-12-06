@@ -6,17 +6,11 @@ public class App {
         System.out.println("What's your name?");
 
         String name = input.next();
-        SayHello intro = new SayHello(name);
-        GamePlay game1 = new GamePlay();
+        Player player = new Player(name);
+        player.sayHello();
+        GamePlay game = new GamePlay();
 
-        // GameBoards.reMapTargetBoard();
-
-        TargettingMaps target = new TargettingMaps();
-
-        // GameBoards.printAllBoards();
-        game1.parseCord("A1");
-        game1.startGame();
-        // GameBoards.printAllBoards();
-
+        game.startGame();
+        player.sayGoodBye();
     }
 }
