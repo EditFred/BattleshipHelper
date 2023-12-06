@@ -8,7 +8,8 @@ public class GamePlay {
     private ArrayList<Ship> unSunkHitShips = new ArrayList<Ship>();
     private ArrayList<Ship> sunkShips = new ArrayList<Ship>();
 
-    public char[][] currentBoard = new char[10][10];
+    // public char[][] currentBoard = new char[10][10];
+    private PlayingBoard board = new PlayingBoard();
     TargettingMaps radar = new TargettingMaps();
 
     public void startGame(){
@@ -18,11 +19,11 @@ public class GamePlay {
         battleship = new Ship("Battleship");   
         carrier = new Ship("Carrier");
 
-        for(int i = 0; i < currentBoard.length; i++){
-            for(int j = 0; j < currentBoard[i].length; j++){
-                currentBoard[i][j] = '~';
-            }
-        }
+        // for(int i = 0; i < currentBoard.length; i++){
+        //     for(int j = 0; j < currentBoard[i].length; j++){
+        //         currentBoard[i][j] = '~';
+        //     }
+        // }
 
         /// GAME LOOP \\\
         while(!playMode.equals("endGame")){
@@ -47,7 +48,8 @@ public class GamePlay {
             hit(hitBoat, gridCord, target);
         } else {
             if(result.equals("end")){playMode = "endGame";} // kill game
-            updateBoard(target, 'O');
+            // updateBoard(target, 'O');
+            board.updateBoard(target, 'O');
         }
     }
 
@@ -57,32 +59,37 @@ public class GamePlay {
         switch(boatChar){
             case 'p':
             patrolBoat.gotHit(gridCord);
-            updateBoard(target, boatChar);
+            // updateBoard(target, boatChar);
+            board.updateBoard(target, boatChar);
             if(!unSunkHitShips.contains(patrolBoat)){unSunkHitShips.add(patrolBoat);}
             if(patrolBoat.isSunk()){ sunkBoat(patrolBoat);}
             //clear impossible opens
             break;
             case 's':
             submarine.gotHit(gridCord);
-            updateBoard(target, boatChar);
+            // updateBoard(target, boatChar);
+            board.updateBoard(target, boatChar);
             if(!unSunkHitShips.contains(submarine)){unSunkHitShips.add(submarine);}
             if(submarine.isSunk()){ sunkBoat(submarine);}
             break;
             case 'd':
             destroyer.gotHit(gridCord);
-            updateBoard(target, boatChar);
+            // updateBoard(target, boatChar);
+            board.updateBoard(target, boatChar);
             if(!unSunkHitShips.contains(destroyer)){unSunkHitShips.add(destroyer);}
             if(destroyer.isSunk()){ sunkBoat(destroyer);}
             break;
             case 'b':
             battleship.gotHit(gridCord);
-            updateBoard(target, boatChar);
+            // updateBoard(target, boatChar);
+            board.updateBoard(target, boatChar);
             if(!unSunkHitShips.contains(battleship)){unSunkHitShips.add(battleship);}
             if(battleship.isSunk()){ sunkBoat(battleship);}
             break;
             case 'c':
             carrier.gotHit(gridCord);
-            updateBoard(target, boatChar);
+            // updateBoard(target, boatChar);
+            board.updateBoard(target, boatChar);
             if(!unSunkHitShips.contains(carrier)){unSunkHitShips.add(carrier);}
             if(carrier.isSunk()){ sunkBoat(carrier);}
             break;
@@ -93,26 +100,30 @@ public class GamePlay {
 
     private void sunkBoat(Ship ship){
         updateGameMode();
-        clearTooSmallCavities();
-        radar.reGenerateTargettingBoard(currentBoard, playMode);
+        // clearTooSmallCavities();
+        board.removeTooSmallCavities();
+        // radar.reGenerateTargettingBoard(currentBoard, playMode);
+        radar.reGenerateTargettingBoard(board.getBoard(), playMode);
 
         unSunkHitShips.remove(ship);
         sunkShips.add(ship);
         if(sunkShips.size() == 5){
             playMode = "endGame";
-            System.out.println("That's a wrap, GG!");
         }
     }
     private void updateGameMode(){
         if(patrolBoat.isSunk()){
             playMode = "Sub Search";
             radar.setMapBookPage(1);
+            board.setSmallestShip(3);
             if(submarine.isSunk() && destroyer.isSunk()){
                 playMode = "Battleship Search";
                 radar.setMapBookPage(2);
+                board.setSmallestShip(4);
                 if(battleship.isSunk()){
                     playMode = "Carrier Search";
                     radar.setMapBookPage(3);
+                    board.setSmallestShip(5);
                     if(carrier.isSunk()){
                         playMode = "endGame";
                     }
@@ -120,9 +131,9 @@ public class GamePlay {
             }
         }
     }
-    private void updateBoard(int[] target, char targetResult){
-        currentBoard[target[0]][target[1]] = Character.toUpperCase(targetResult);
-    }
+    // private void updateBoard(int[] target, char targetResult){
+    //     currentBoard[target[0]][target[1]] = Character.toUpperCase(targetResult);
+    // }
 
     public int[] parseCord(String cord){
         int[] arrayCord = new int[2];
@@ -212,12 +223,13 @@ public class GamePlay {
         boolean searching = true;
         char [][] targetBoard = radar.getTargetMap();
         if(unSunkHitShips.size() > 0){
-            target = reTarget(unSunkHitShips.get(0));
+            target = TargetSelect.reTarget(unSunkHitShips.get(0), board);
         } else {
             while (searching){
                 int randX = (int)Math.floor(Math.random() * 10);
                 int randY = (int)Math.floor(Math.random() * 10);
-                if(targetBoard[randX][randY] == 'X' && currentBoard[randX][randY] == '~'){
+                // if(targetBoard[randX][randY] == 'X' && currentBoard[randX][randY] == '~'){
+                if(targetBoard[randX][randY] == 'X' && board.cordinateIsEmpty(randX, randY)){
                     target[0] = randX;
                     target[1] = randY;
                     searching = false;
@@ -227,96 +239,104 @@ public class GamePlay {
         return target;
     }
 
-    private int[] reTarget(Ship ship){
-        boolean retargeting = true;
-        int[] firstHit = parseCord(ship.getHitsLocation()[0]);
-        int[] target = firstHit;
-        int[] newTarget = target;
+    // private int[] reTarget(Ship ship, char[][] currentBoard){
+    //     boolean retargeting = true;
+    //     int[] firstHit = parseCord(ship.getHitsLocation()[0]);
+    //     int[] target = firstHit;
+    //     int[] newTarget = target;
 
-        if(ship.getOrientation().equals("unknown")){
-            if(!checkFit('v', parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)){
-                ship.setOrientation("horizontal");
-            } else if(!checkFit('h', parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)) {
-                ship.setOrientation("vertical");
-            }
-        }
-        if(ship.getOrientation().equals("unknown")){
-            char[] directions = {'u', 'r', 'd', 'l'};
-            int direcIndex = (int)Math.floor(Math.random() * 4);
-            char direction = directions[direcIndex];
+    //     if(ship.getOrientation().equals("unknown")){
+    //         if(!checkFit('v', parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)){
+    //             ship.setOrientation("horizontal");
+    //         } else if(!checkFit('h', parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)) {
+    //             ship.setOrientation("vertical");
+    //         }
+    //     }
+    //     if(ship.getOrientation().equals("unknown")){
+    //         char[] directions = {'u', 'r', 'd', 'l'};
+    //         int direcIndex = (int)Math.floor(Math.random() * 4);
+    //         char direction = directions[direcIndex];
 
-            while(retargeting){
-                if(checkFit(direction, parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)){
-                    newTarget = goFromRandom(direction, target);
-                    retargeting = false;
-                } else {
-                    direction = turnAround(direction);
-                    newTarget = goFromRandom(direction, target);
-                    retargeting = false;
-                }
-            }
-        } else if(ship.getOrientation().equals("vertical")){
-            char[] directions = {'u', 'd'};
-            char direction = directions[(int)Math.floor(Math.random() * 2)];
+    //         while(retargeting){
+    //             if(checkFit(direction, parseCord(ship.getHitsLocation()[0]), ship.getLength() - 1)){
+    //                 newTarget = goFromRandom(direction, target);
+    //                 retargeting = false;
+    //             } else {
+    //                 direction = turnAround(direction);
+    //                 newTarget = goFromRandom(direction, target);
+    //                 retargeting = false;
+    //             }
+    //         }
+    //     } else if(ship.getOrientation().equals("vertical")){
+    //         char[] directions = {'u', 'd'};
+    //         char direction = directions[(int)Math.floor(Math.random() * 2)];
 
-            while(retargeting){
-                if(direction == 'u'){
-                    newTarget = goUp(newTarget);
-                    if(outOfBounds(newTarget)){
-                        direction = turnAround(direction);
-                    } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
-                        retargeting = false;
-                    } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
-                        continue;
-                    } else {
-                        direction = turnAround(direction);
-                    }
-                } else {
-                    newTarget = goDown(newTarget);
-                    if(outOfBounds(newTarget)){
-                        direction = turnAround(direction);
-                    } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
-                        retargeting = false;
-                    } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
-                        continue;
-                    } else {
-                        direction = turnAround(direction);
-                    }
-                }
-            }
-        } else if(ship.getOrientation().equals("horizontal")){
-            char[] directions = {'r', 'l'};
-            char direction = directions[(int)Math.floor(Math.random() * 2)];
+    //         while(retargeting){
+    //             if(direction == 'u'){
+    //                 newTarget = goUp(newTarget);
+    //                 if(outOfBounds(newTarget)){
+    //                     direction = turnAround(direction);
+    //                 // } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
+    //                 } else if(board.cordinateIsEmpty(newTarget[0],newTarget[1])){
+    //                     retargeting = false;
+    //                 // } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
+    //                 } else if (board.getBoardChar(newTarget[0],newTarget[1]) == ship.getHitSig()){
+    //                     continue;
+    //                 } else {
+    //                     direction = turnAround(direction);
+    //                 }
+    //             } else {
+    //                 newTarget = goDown(newTarget);
+    //                 if(outOfBounds(newTarget)){
+    //                     direction = turnAround(direction);
+    //                 // } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
+    //                 } else if(board.cordinateIsEmpty(newTarget[0],newTarget[1])){
+    //                     retargeting = false;
+    //                 // } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
+    //                 } else if (board.getBoardChar(newTarget[0],newTarget[1]) == ship.getHitSig()){
+    //                     continue;
+    //                 } else {
+    //                     direction = turnAround(direction);
+    //                 }
+    //             }
+    //         }
+    //     } else if(ship.getOrientation().equals("horizontal")){
+    //         char[] directions = {'r', 'l'};
+    //         char direction = directions[(int)Math.floor(Math.random() * 2)];
 
-            while(retargeting){
-                if(direction == 'r'){
-                    newTarget = goRight(newTarget);
-                    if(outOfBounds(newTarget)){
-                        direction = turnAround(direction);
-                    } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
-                        retargeting = false;
-                    } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
-                        continue;
-                    } else {
-                        direction = turnAround(direction);
-                    }
-                } else {
-                    newTarget = goLeft(newTarget);
-                    if(outOfBounds(newTarget)){
-                        direction = turnAround(direction);
-                    }else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
-                        retargeting = false;
-                    } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
-                        continue;
-                    } else {
-                        direction = turnAround(direction);
-                    }
-                }
-            }
-        }       
+    //         while(retargeting){
+    //             if(direction == 'r'){
+    //                 newTarget = goRight(newTarget);
+    //                 if(outOfBounds(newTarget)){z
+    //                     direction = turnAround(direction);
+    //                 // } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
+    //                 } else if(board.cordinateIsEmpty(newTarget[0],newTarget[1])){
+    //                     retargeting = false;
+    //                 // } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
+    //                 } else if (board.getBoardChar(newTarget[0],newTarget[1]) == ship.getHitSig()){
+    //                     continue;
+    //                 } else {
+    //                     direction = turnAround(direction);
+    //                 }
+    //             } else {
+    //                 newTarget = goLeft(newTarget);
+    //                 if(outOfBounds(newTarget)){
+    //                     direction = turnAround(direction);
+    //                 // } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
+    //                 } else if(board.cordinateIsEmpty(newTarget[0],newTarget[1])){
+    //                     retargeting = false;
+    //                 // } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
+    //                 } else if (board.getBoardChar(newTarget[0],newTarget[1]) == ship.getHitSig()){
+    //                     continue;
+    //                 } else {
+    //                     direction = turnAround(direction);
+    //                 }
+    //             }
+    //         }
+    //     }       
 
-        return newTarget;
-    }
+    //     return newTarget;
+    // }
 
     //retargeting assist functions
     //direction can be changed to 1 and -1 to represent right/down and left/up
@@ -403,150 +423,152 @@ public class GamePlay {
                 break;
         }
 
-        for(int i = 0; i < currentBoard.length; i++){
-            for(int j = 0; j < currentBoard[i].length; j++){
-                if(currentBoard[i][j] == '~'){
-                    unShotTile[0] = i;
-                    unShotTile[1] = j;
-                    if(!checkFit('h', unShotTile, fitLength) && !checkFit('v', unShotTile, fitLength)){
-                        currentBoard[i][j] = 'O';
-                    }
-                }
-            }
-        }
+        // for(int i = 0; i < currentBoard.length; i++){
+        //     for(int j = 0; j < currentBoard[i].length; j++){
+        //         if(currentBoard[i][j] == '~'){
+        //             unShotTile[0] = i;
+        //             unShotTile[1] = j;
+        //             if(!checkFit('h', unShotTile, fitLength) && !checkFit('v', unShotTile, fitLength)){
+        //                 currentBoard[i][j] = 'O';
+        //             }
+        //         }
+        //     }
+        // }
+
+
     }
 
 
     /* MASSIVE BUT IMPORTANT FUNCTION: checks if a ship can fit before making a valid guess */
 
-    private boolean checkFit(char direction, int[] startCord, int lengthNeeded){
-        int needed = lengthNeeded;
-        int open = 0;
-        boolean checking = true;
-        int[] firstHit = startCord;
-        int[] nextCheck = {firstHit[0], firstHit[1]};
+    // private boolean checkFit(char direction, int[] startCord, int lengthNeeded){
+    //     int needed = lengthNeeded;
+    //     int open = 0;
+    //     boolean checking = true;
+    //     int[] firstHit = startCord;
+    //     int[] nextCheck = {firstHit[0], firstHit[1]};
 
-        switch (direction){
-            case 'h':
-                boolean rightOpen = true;
-                while (checking){
-                    if(rightOpen){
-                        nextCheck = goRight(nextCheck);
-                        if(outOfBounds(nextCheck)){
-                            nextCheck[0] = firstHit[0];
-                            nextCheck[1] = firstHit[1];
-                            rightOpen = false;
-                        } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
-                            open++;
-                            continue;
-                        } else {
-                            nextCheck[0] = firstHit[0];
-                            nextCheck[1] = firstHit[1];
-                            rightOpen = false;
-                        }
-                    } else {
-                        nextCheck = goLeft(nextCheck);
-                        if(outOfBounds(nextCheck)){
-                            checking = false;
-                            break;
-                        } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
-                            open++;
-                            continue;
-                        } else {
-                            checking = false;
-                            break;
-                        }
-                    }
-                }
-                return open >= needed;
+    //     switch (direction){
+    //         case 'h':
+    //             boolean rightOpen = true;
+    //             while (checking){
+    //                 if(rightOpen){
+    //                     nextCheck = goRight(nextCheck);
+    //                     if(outOfBounds(nextCheck)){
+    //                         nextCheck[0] = firstHit[0];
+    //                         nextCheck[1] = firstHit[1];
+    //                         rightOpen = false;
+    //                     } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+    //                         open++;
+    //                         continue;
+    //                     } else {
+    //                         nextCheck[0] = firstHit[0];
+    //                         nextCheck[1] = firstHit[1];
+    //                         rightOpen = false;
+    //                     }
+    //                 } else {
+    //                     nextCheck = goLeft(nextCheck);
+    //                     if(outOfBounds(nextCheck)){
+    //                         checking = false;
+    //                         break;
+    //                     } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+    //                         open++;
+    //                         continue;
+    //                     } else {
+    //                         checking = false;
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+    //             return open >= needed;
 
-            case 'v':
-                boolean upOpen = true;
-                while (checking){
-                    if(upOpen){
-                        nextCheck = goUp(nextCheck);
-                        if(outOfBounds(nextCheck)){
-                            nextCheck[0] = firstHit[0];
-                            nextCheck[1] = firstHit[1];
-                            upOpen = false;
-                        } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
-                            open++;
-                            continue;
-                        } else {
-                            nextCheck[0] = firstHit[0];
-                            nextCheck[1] = firstHit[1];
-                            upOpen = false;
-                        }
-                    } else {
-                        nextCheck = goDown(nextCheck);
-                        if(outOfBounds(nextCheck)){
-                            checking = false;
-                            break;
-                        } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
-                            open++;
-                            continue;
-                        } else {
-                            checking = false;
-                            break;
-                        }
-                    }
-                }
-                    return open >= needed;
-            case 'u':
-                while (checking){
-                    nextCheck = goUp(nextCheck);
-                    if(outOfBounds(nextCheck)){
-                        checking = false;
-                    } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
-                        open++;
-                        continue;
-                    } else {
-                        checking = false;
-                    }
-                }
-                return open >= needed;
-            case 'd':
-                while (checking){
-                    nextCheck = goDown(nextCheck);
-                    if(outOfBounds(nextCheck)){
-                        checking = false;
-                    } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
-                        open++;
-                        continue;
-                    } else {
-                        checking = false;
-                    }
-                }
-                return open >= needed;
-            case 'l':
-                while (checking){
-                    nextCheck = goLeft(nextCheck);
-                    if(outOfBounds(nextCheck)){
-                        checking = false;
-                    } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
-                        open++;
-                        continue;
-                    } else {
-                        checking = false;
-                    }
-                }
-                return open >= needed;
-            case 'r':
-                while (checking){
-                    nextCheck = goRight(nextCheck);
-                    if(outOfBounds(nextCheck)){
-                        checking = false;
-                    } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
-                        open++;
-                        continue;
-                    } else {
-                        checking = false;
-                    }
-                }
-                return open >= needed;
-            default:
-            return true;
-        }
-    }
+    //         case 'v':
+    //             boolean upOpen = true;
+    //             while (checking){
+    //                 if(upOpen){
+    //                     nextCheck = goUp(nextCheck);
+    //                     if(outOfBounds(nextCheck)){
+    //                         nextCheck[0] = firstHit[0];
+    //                         nextCheck[1] = firstHit[1];
+    //                         upOpen = false;
+    //                     } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+    //                         open++;
+    //                         continue;
+    //                     } else {
+    //                         nextCheck[0] = firstHit[0];
+    //                         nextCheck[1] = firstHit[1];
+    //                         upOpen = false;
+    //                     }
+    //                 } else {
+    //                     nextCheck = goDown(nextCheck);
+    //                     if(outOfBounds(nextCheck)){
+    //                         checking = false;
+    //                         break;
+    //                     } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+    //                         open++;
+    //                         continue;
+    //                     } else {
+    //                         checking = false;
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+    //                 return open >= needed;
+    //         case 'u':
+    //             while (checking){
+    //                 nextCheck = goUp(nextCheck);
+    //                 if(outOfBounds(nextCheck)){
+    //                     checking = false;
+    //                 } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+    //                     open++;
+    //                     continue;
+    //                 } else {
+    //                     checking = false;
+    //                 }
+    //             }
+    //             return open >= needed;
+    //         case 'd':
+    //             while (checking){
+    //                 nextCheck = goDown(nextCheck);
+    //                 if(outOfBounds(nextCheck)){
+    //                     checking = false;
+    //                 } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+    //                     open++;
+    //                     continue;
+    //                 } else {
+    //                     checking = false;
+    //                 }
+    //             }
+    //             return open >= needed;
+    //         case 'l':
+    //             while (checking){
+    //                 nextCheck = goLeft(nextCheck);
+    //                 if(outOfBounds(nextCheck)){
+    //                     checking = false;
+    //                 } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+    //                     open++;
+    //                     continue;
+    //                 } else {
+    //                     checking = false;
+    //                 }
+    //             }
+    //             return open >= needed;
+    //         case 'r':
+    //             while (checking){
+    //                 nextCheck = goRight(nextCheck);
+    //                 if(outOfBounds(nextCheck)){
+    //                     checking = false;
+    //                 } else if(currentBoard[nextCheck[0]][nextCheck[1]] == '~'){
+    //                     open++;
+    //                     continue;
+    //                 } else {
+    //                     checking = false;
+    //                 }
+    //             }
+    //             return open >= needed;
+    //         default:
+    //         return true;
+    //     }
+    // }
 
 }
