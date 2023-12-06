@@ -21,7 +21,7 @@ public class PlayingBoard {
                 if(board[i][j] == '~'){
                     unShotTile[0] = i;
                     unShotTile[1] = j;
-                    if(!TargetSelect.checkFit('h', unShotTile, smallestShip-, board) && !TargetSelect.checkFit('v', unShotTile, smallestShip-1, board)){
+                    if(!TargetSelect.checkFit('h', unShotTile, smallestShip-1, board) && !TargetSelect.checkFit('v', unShotTile, smallestShip-1, board)){
                         board[i][j] = 'O';
                     }
                 }

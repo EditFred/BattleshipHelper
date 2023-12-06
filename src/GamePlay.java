@@ -43,7 +43,7 @@ public class GamePlay {
         String result = input.nextLine().toLowerCase();
 
         if(result.equals("y") || result.equals("yes")){
-            System.out.print("which boat?");
+            System.out.print("which boat? ");
             String hitBoat = input.nextLine().toLowerCase();
             hit(hitBoat, gridCord, target);
         } else {

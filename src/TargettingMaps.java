@@ -6,6 +6,8 @@ public class TargettingMaps {
     private char[][][][] mapBook = new char[4][][][];
 
 
+
+
     public TargettingMaps(){
         generateTargetBoard();
         generateTargettingMapBook();
@@ -43,20 +45,25 @@ public class TargettingMaps {
          */
 
         for(int i = 0; i < mapBook.length; i++){
-            int chartsNeeded = i + 2;
+            int[] mirrorList = {9,8,7,6,5,4,3,2,1,0};
+            int[] chartsNeededList = {2,6,8,10};
+            int chartsNeeded = chartsNeededList[i];
+            int modulosNum = i + 2;
             char [][][] charts = new char[chartsNeeded][10][10];
-            int chartIndex = 0;
-            for(char[][] chart : charts){
-                for(int j = 0; j < chart.length; j++){
-                    for(int k = 0; k < chart[j].length; k++){
-                        if((j + chartIndex ) % chartsNeeded == k % chartsNeeded){
-                            chart[j][k] = 'X';
+            for(int j = 0; j < (chartsNeeded / 2); j++){
+                char[][] chart = charts[j];
+                char[][] chartMirror = charts[j + (chartsNeeded/2)];
+                for(int k = 0; k < 10; k++){
+                    for(int l = 0; l < 10; l++){
+                        if((k + j ) % modulosNum == l % modulosNum){
+                            chart[k][l] = 'X';
+                            chartMirror[mirrorList[k]][l] = 'X';
                         } else {
-                            chart[j][k] = 'O';
+                            chart[k][l] = 'O';
+                            chartMirror[mirrorList[k]][l] = 'O';
                         }
                     }
                 }
-                chartIndex++;
             }
             mapBook[i] = charts;
         }
