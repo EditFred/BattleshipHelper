@@ -57,10 +57,10 @@ public class TargettingMaps {
                     for(int l = 0; l < 10; l++){
                         if((k + j ) % modulosNum == l % modulosNum){
                             chart[k][l] = 'X';
-                            chartMirror[mirrorList[k]][l] = 'X';
+                            chartMirror[k][mirrorList[l]] = 'X';
                         } else {
                             chart[k][l] = 'O';
-                            chartMirror[mirrorList[k]][l] = 'O';
+                            chartMirror[k][mirrorList[l]] = 'O';
                         }
                     }
                 }
