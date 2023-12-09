@@ -1,50 +1,5 @@
 public class TargetSelect {
-    
 
-
-
-
-
-    public static int[] parseCord(String cord){
-        int[] arrayCord = new int[2];
-        switch (cord.charAt(0)){
-            case 'A':
-            arrayCord[0] = 0;
-            break;
-            case 'B':
-            arrayCord[0] = 1;
-            break;
-            case 'C':
-            arrayCord[0] = 2;
-            break;
-            case 'D':
-            arrayCord[0] = 3;
-            break;
-            case 'E':
-            arrayCord[0] = 4;
-            break;
-            case 'F':
-            arrayCord[0] = 5;
-            break;
-            case 'G':
-            arrayCord[0] = 6;
-            break;
-            case 'H':
-            arrayCord[0] = 7;
-            break;
-            case 'I':
-            arrayCord[0] = 8;
-            break;
-            case 'J':
-            arrayCord[0] = 9;
-            break;
-            default:
-            arrayCord[0] = 0;
-            break;
-        };
-        arrayCord[1] = Integer.valueOf(cord.substring(1)) - 1;
-        return arrayCord;
-    }
     private static char turnAround(char direction){
         switch (direction){
             case 'r':
@@ -60,7 +15,7 @@ public class TargetSelect {
         }
     }
 
-    private static boolean outOfBounds(int[] nextTarget){
+    public static boolean outOfBounds(int[] nextTarget){
         for(int n : nextTarget){
             if(n < 0 || n > 9){
                 return true;
@@ -69,25 +24,25 @@ public class TargetSelect {
         return false;
     }
 
-    private static int[] goUp(int[] cord){
+    public static int[] goUp(int[] cord){
         int[] newCord = new int[2];
-        newCord[1] = cord[1];
         newCord[0] = cord[0]-1;
-        return newCord;
-    }
-    private static int[] goDown(int[] cord){
-        int[] newCord = new int[2];
         newCord[1] = cord[1];
-        newCord[0] = cord[0]+1;
         return newCord;
     }
-    private static int[] goRight(int[] cord){
+    public static int[] goDown(int[] cord){
+        int[] newCord = new int[2];
+        newCord[0] = cord[0]+1;
+        newCord[1] = cord[1];
+        return newCord;
+    }
+    public static int[] goRight(int[] cord){
         int[] newCord = new int[2];
         newCord[0] = cord[0];
         newCord[1] = cord[1]+1;
         return newCord;
     }
-    private static int[] goLeft(int[] cord){
+    public static int[] goLeft(int[] cord){
         int[] newCord = new int[2];
         newCord[0] = cord[0];
         newCord[1] = cord[1]-1;
@@ -144,10 +99,8 @@ public class TargetSelect {
                     newTarget = goUp(newTarget);
                     if(outOfBounds(newTarget)){
                         direction = turnAround(direction);
-                    // } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
                     } else if(board.cordinateIsEmpty(newTarget[0],newTarget[1])){
                         retargeting = false;
-                    // } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
                     } else if (board.getBoardChar(newTarget[0],newTarget[1]) == ship.getHitSig()){
                         continue;
                     } else {
@@ -157,10 +110,8 @@ public class TargetSelect {
                     newTarget = goDown(newTarget);
                     if(outOfBounds(newTarget)){
                         direction = turnAround(direction);
-                    // } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
                     } else if(board.cordinateIsEmpty(newTarget[0],newTarget[1])){
                         retargeting = false;
-                    // } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
                     } else if (board.getBoardChar(newTarget[0],newTarget[1]) == ship.getHitSig()){
                         continue;
                     } else {
@@ -177,10 +128,8 @@ public class TargetSelect {
                     newTarget = goRight(newTarget);
                     if(outOfBounds(newTarget)){
                         direction = turnAround(direction);
-                    // } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
                     } else if(board.cordinateIsEmpty(newTarget[0],newTarget[1])){
                         retargeting = false;
-                    // } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
                     } else if (board.getBoardChar(newTarget[0],newTarget[1]) == ship.getHitSig()){
                         continue;
                     } else {
@@ -190,10 +139,8 @@ public class TargetSelect {
                     newTarget = goLeft(newTarget);
                     if(outOfBounds(newTarget)){
                         direction = turnAround(direction);
-                    // } else if(currentBoard[newTarget[0]][newTarget[1]] == '~'){
                     } else if(board.cordinateIsEmpty(newTarget[0],newTarget[1])){
                         retargeting = false;
-                    // } else if (currentBoard[newTarget[0]][newTarget[1]] == ship.getHitSig()){
                     } else if (board.getBoardChar(newTarget[0],newTarget[1]) == ship.getHitSig()){
                         continue;
                     } else {
@@ -206,7 +153,7 @@ public class TargetSelect {
         return newTarget;
     }
 
-
+    //refactor
     public static boolean checkFit(char direction, int[] startCord, int lengthNeeded, char[][] currentBoard){
         int needed = lengthNeeded;
         int open = 0;
@@ -335,6 +282,89 @@ public class TargetSelect {
             default:
             return true;
         }
+    }
+
+    public static int[] parseCord(String cord){
+        int[] arrayCord = new int[2];
+        switch (cord.charAt(0)){
+            case 'A':
+                arrayCord[0] = 0;
+                break;
+            case 'B':
+                arrayCord[0] = 1;
+                break;
+            case 'C':
+                arrayCord[0] = 2;
+                break;
+            case 'D':
+                arrayCord[0] = 3;
+                break;
+            case 'E':
+                arrayCord[0] = 4;
+                break;
+            case 'F':
+                arrayCord[0] = 5;
+                break;
+            case 'G':
+                arrayCord[0] = 6;
+                break;
+            case 'H':
+                arrayCord[0] = 7;
+                break;
+            case 'I':
+                arrayCord[0] = 8;
+                break;
+            case 'J':
+                arrayCord[0] = 9;
+                break;
+            default:
+                arrayCord[0] = 0;
+                break;
+        }
+        arrayCord[1] = Integer.valueOf(cord.substring(1)) - 1;
+        return arrayCord;
+    }
+    public static String parseArray(int[] arrayCord){
+        String Cord;
+
+        switch(arrayCord[0]){
+            case 0:
+                Cord = "A";
+                break;
+            case 1:
+                Cord = "B";
+                break;
+            case 2:
+                Cord = "C";
+                break;
+            case 3:
+                Cord = "D";
+                break;
+            case 4:
+                Cord = "E";
+                break;
+            case 5:
+                Cord = "F";
+                break;
+            case 6:
+                Cord = "G";
+                break;
+            case 7:
+                Cord = "H";
+                break;
+            case 8:
+                Cord = "I";
+                break;
+            case 9:
+                Cord = "J";
+                break;
+            default: 
+                Cord = "X";
+                break;
+        }
+        String column = String.valueOf(arrayCord[1]+1);
+        Cord += column;
+        return Cord;
     }
 
 }

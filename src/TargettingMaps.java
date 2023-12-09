@@ -141,37 +141,13 @@ public class TargettingMaps {
         }
         return true;
     }
-    private int[] goUp(int[] cord){
-        int[] newCord = new int[2];
-        newCord[0] = cord[0]-1;
-        newCord[1] = cord[1];
-        return newCord;
-    }
-    private int[] goDown(int[] cord){
-        int[] newCord = new int[2];
-        newCord[0] = cord[0]+1;
-        newCord[1] = cord[1];
-        return newCord;
-    }
-    private int[] goRight(int[] cord){
-        int[] newCord = new int[2];
-        newCord[0] = cord[0];
-        newCord[1] = cord[1]+1;
-        return newCord;
-    }
-    private int[] goLeft(int[] cord){
-        int[] newCord = new int[2];
-        newCord[0] = cord[0];
-        newCord[1] = cord[1]-1;
-        return newCord;
-    }
 
     private void checkSurrounding(int[] cord, ArrayList<int[]> currentZone, char[][] boardCopy, char zoneCount){
         int[] up, down, right, left = new int[2];
-        up = goUp(cord);
-        down = goDown(cord);
-        right = goRight(cord);
-        left = goLeft(cord);
+        up = TargetSelect.goUp(cord);
+        down = TargetSelect.goDown(cord);
+        right = TargetSelect.goRight(cord);
+        left = TargetSelect.goLeft(cord);
 
         if(inBounds(up) && boardCopy[up[0]][up[1]] == '~'){
             currentZone.add(up);
