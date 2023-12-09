@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Utility {
     
-    private static boolean deBug = false;
+    public static boolean deBug = false;
 
     public static void printBoard(char[][] board){
         for(char[] row : board){

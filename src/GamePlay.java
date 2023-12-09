@@ -2,14 +2,14 @@ import java.util.Scanner;
 import java.util.ArrayList;
 public class GamePlay {
     public String playMode = "Patrol Search";
-    public boolean inGame = true;
-    public Ship patrolBoat, submarine, destroyer, battleship, carrier;
+    private boolean inGame = true;
+    private Ship patrolBoat, submarine, destroyer, battleship, carrier;
 
     private ArrayList<Ship> unSunkHitShips = new ArrayList<Ship>();
     private ArrayList<Ship> sunkShips = new ArrayList<Ship>();
 
     private PlayingBoard board = new PlayingBoard();
-    TargettingMaps radar = new TargettingMaps();
+    private TargettingMaps radar = new TargettingMaps();
 
     public void startGame(){
         patrolBoat = new Ship("Patrol Boat");
@@ -21,14 +21,13 @@ public class GamePlay {
 
         /// GAME LOOP \\\
         while(!playMode.equals("endGame")){
-            // System.out.println("Game loop: " + playMode);
             makeGuess();
         }
     }
 
     public void makeGuess(){
         int[] target = targetSelect();
-        String gridCord = parseArray(target);
+        String gridCord = TargetSelect.parseArray(target);
         Scanner input = new Scanner(System.in);
 
         System.out.println();
@@ -118,104 +117,10 @@ public class GamePlay {
     }
 
     private int[] targetSelect(){
-        int[] target = new int[]{0,0};
-        boolean searching = true;
-        char [][] targetBoard = radar.getTargetMap();
         if(unSunkHitShips.size() > 0){
-            target = TargetSelect.reTarget(unSunkHitShips.get(0), board);
+            return TargetSelect.reTarget(unSunkHitShips.get(0), board);
         } else {
-            while (searching){
-                int randX = (int)Math.floor(Math.random() * 10);
-                int randY = (int)Math.floor(Math.random() * 10);
-                if(targetBoard[randX][randY] == 'X' && board.cordinateIsEmpty(randX, randY)){
-                    target[0] = randX;
-                    target[1] = randY;
-                    searching = false;
-                }
-            }
+            return TargetSelect.randomTarget(radar, board);
         }
-        return target;
-    }
-    public int[] parseCord(String cord){
-        int[] arrayCord = new int[2];
-        switch (cord.charAt(0)){
-            case 'A':
-                arrayCord[0] = 0;
-                break;
-            case 'B':
-                arrayCord[0] = 1;
-                break;
-            case 'C':
-                arrayCord[0] = 2;
-                break;
-            case 'D':
-                arrayCord[0] = 3;
-                break;
-            case 'E':
-                arrayCord[0] = 4;
-                break;
-            case 'F':
-                arrayCord[0] = 5;
-                break;
-            case 'G':
-                arrayCord[0] = 6;
-                break;
-            case 'H':
-                arrayCord[0] = 7;
-                break;
-            case 'I':
-                arrayCord[0] = 8;
-                break;
-            case 'J':
-                arrayCord[0] = 9;
-                break;
-            default:
-                arrayCord[0] = 0;
-                break;
-        }
-        arrayCord[1] = Integer.valueOf(cord.substring(1)) - 1;
-        return arrayCord;
-    }
-    public String parseArray(int[] arrayCord){
-        String Cord;
-
-        switch(arrayCord[0]){
-            case 0:
-                Cord = "A";
-                break;
-            case 1:
-                Cord = "B";
-                break;
-            case 2:
-                Cord = "C";
-                break;
-            case 3:
-                Cord = "D";
-                break;
-            case 4:
-                Cord = "E";
-                break;
-            case 5:
-                Cord = "F";
-                break;
-            case 6:
-                Cord = "G";
-                break;
-            case 7:
-                Cord = "H";
-                break;
-            case 8:
-                Cord = "I";
-                break;
-            case 9:
-                Cord = "J";
-                break;
-            default: 
-                Cord = "X";
-                break;
-        }
-        String column = String.valueOf(arrayCord[1]+1);
-        Cord += column;
-        return Cord;
-    }
+    }  
 }

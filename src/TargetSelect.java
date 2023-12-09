@@ -62,6 +62,22 @@ public class TargetSelect {
         return goRight(cord);
     }
 
+    public static int[] randomTarget(TargettingMaps radar, PlayingBoard board){
+        boolean searching = true;
+        int[] target = new int[]{0,0};
+        char [][] targetBoard = radar.getTargetMap();
+        while (searching){
+            int randX = (int)Math.floor(Math.random() * 10);
+            int randY = (int)Math.floor(Math.random() * 10);
+            if(targetBoard[randX][randY] == 'X' && board.cordinateIsEmpty(randX, randY)){
+                target[0] = randX;
+                target[1] = randY;
+                searching = false;
+            }
+        }
+        return target;
+    }
+
     public static int[] reTarget(Ship ship, PlayingBoard board){
         boolean retargeting = true;
         int[] firstHit = parseCord(ship.getHitsLocation()[0]);
