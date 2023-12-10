@@ -36,7 +36,7 @@ public class TargettingMaps {
         /* The purpose of this function is to create alternate maps that will be needed to remap the current target board,
          * as there may be a more efficient path, the most efficient path changes according to hits/misses once the program starts to
          * find the boats on the field. New Maps are create for all sizes. Every 2, 3, 4, and 5.
-         * An additional map is also created for each possible offset and mirror offset.
+         * An additional map is also created for each possible offset AND mirror offset.
          * everyTwo, has no additional offset(first is mirror'ed), everyThree has two possible offsets, everyFour has three, and everyFive has four.
          * 
          */

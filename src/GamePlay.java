@@ -2,7 +2,6 @@ import java.util.Scanner;
 import java.util.ArrayList;
 public class GamePlay {
     public String playMode = "Patrol Search";
-    private boolean inGame = true;
     private Ship patrolBoat, submarine, destroyer, battleship, carrier;
 
     private ArrayList<Ship> unSunkHitShips = new ArrayList<Ship>();
@@ -44,7 +43,6 @@ public class GamePlay {
             board.updateBoard(target, 'O');
         }
     }
-
     
     private void hit(String hitBoatResult, String gridCord, int[] target){
         char boatChar = hitBoatResult.charAt(0);

@@ -5,7 +5,6 @@ public class Ship {
 
     private int hits = 0;
     private boolean sunk = false;
-
     private String[] hitCords;
     private String orientation = "unknown";
 

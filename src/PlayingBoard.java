@@ -10,10 +10,6 @@ public class PlayingBoard {
         }
     }
 
-
-
-
-
     public void removeTooSmallCavities(){
         int [] unShotTile = new int[2];
         for(int i = 0; i < board.length; i++){
